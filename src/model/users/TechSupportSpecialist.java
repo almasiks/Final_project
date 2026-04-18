@@ -1,5 +1,6 @@
 package model.users;
 
+
 import model.communication.Request;
 
 public class TechSupportSpecialist extends Employee {

@@ -6,7 +6,9 @@ import model.users.Student;
 import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
+
 import java.util.Objects;
+
 
 public class Course implements Serializable {
     private String courseCode;

@@ -1,5 +1,6 @@
 package model.users;
 
+
 import model.academic.Course;
 import model.academic.Mark;
 import java.util.*;

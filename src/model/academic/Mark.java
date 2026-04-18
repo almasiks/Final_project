@@ -49,6 +49,7 @@ public class Mark implements Serializable {
         }
         return "F";
     }
+
     @Override
     public String toString() {
         return "Mark{" + getGradeLetter() + " (" + getTotalScore() + ")}";

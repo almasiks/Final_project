@@ -1,5 +1,6 @@
 package model.communication;
 
+
 import model.users.Employee;
 import java.io.Serializable;
 import java.util.Date;

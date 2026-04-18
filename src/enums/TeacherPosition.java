@@ -1,5 +1,6 @@
 package enums;
 
+
 public enum TeacherPosition {
     LECTOR,
     TUTOR,

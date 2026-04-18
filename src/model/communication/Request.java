@@ -1,5 +1,6 @@
 package model.communication;
 
+
 import enums.RequestStatus;
 
 import java.io.Serializable;
