@@ -4,3 +4,7 @@ out/
 *.jar
 .DS_Store
 /bin/
+.classpath
+.project
+.settings/
+.settings/
