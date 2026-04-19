@@ -19,14 +19,45 @@ public class Teacher extends Employee implements Researcher {
     private List<ResearchPaper> researchPapers = new ArrayList<>();
     private List<ResearchProject> researchProjects = new ArrayList<>();
 
-    public Teacher() {}
+    private List<Integer> ratings = new ArrayList<>();
+
+    public void addRating(int score) {
+        ratings.add(score);
+    }
+
+    public double getAverageRating() {
+        return ratings.stream().mapToInt(i -> i).average().orElse(0.0);
+    }
+
+    public Teacher(String id, String firstName, String lastName,
+                   String email, String password, String department,
+                   TeacherPosition position) {
+        super(id, firstName, lastName, email, password, department);
+        this.position = position;
+    }
 
     public void putMark(Student student, Course course, Mark mark) {
-
+        if (!courses.contains(course)) {
+            System.out.println("You don't teach this course.");
+            return;
+        }
+        if (!course.getRegisteredStudents().contains(student)) {
+            System.out.println("Student is not enrolled in this course.");
+            return;
+        }
+        student.addMark(course, mark);
+        System.out.println("Mark added for " + student.getFirstName()
+                + ": " + mark);
     }
 
     public void sendComplaint(Student student, UrgencyLevel level) {
-
+        String msg = "[COMPLAINT][" + level + "] Teacher "
+                + getFirstName() + " " + getLastName()
+                + " filed a complaint about student: "
+                + student.getFirstName() + " " + student.getLastName();
+        System.out.println(msg);
+        // сохраняем в лог
+        patterns.DataStorage.getInstance().addLog(msg);
     }
 
     public void viewStudents() {
@@ -37,45 +68,35 @@ public class Teacher extends Employee implements Researcher {
     }
 
     public void manageCourse(Course course) {
-
-    }
-
-    private void ensureProfessor() {
-        if (position != TeacherPosition.PROFESSOR) {
-            throw new IllegalStateException("Only PROFESSOR can use researcher functionality");
+        if (!courses.contains(course)) {
+            courses.add(course);
+            course.addInstructor(this);
+            System.out.println("Course " + course.getCourseName() + " assigned to " + getFirstName());
+        } else {
+            System.out.println("Already teaching this course.");
         }
     }
 
     @Override
     public int calculateHIndex() {
-        ensureProfessor();
-
         List<Integer> citationCounts = new ArrayList<>();
         for (ResearchPaper paper : researchPapers) {
             citationCounts.add(paper.getCitations());
         }
-
         citationCounts.sort(Comparator.reverseOrder());
-
         int h = 0;
         for (int i = 0; i < citationCounts.size(); i++) {
-            if (citationCounts.get(i) >= i + 1) {
-                h = i + 1;
-            } else {
-                break;
-            }
+            if (citationCounts.get(i) >= i + 1) h = i + 1;
+            else break;
         }
-
         return h;
     }
 
+
     @Override
     public void printPapers(Comparator<ResearchPaper> comparator) {
-        ensureProfessor();
-
         List<ResearchPaper> sortedPapers = new ArrayList<>(researchPapers);
         sortedPapers.sort(comparator);
-
         for (ResearchPaper paper : sortedPapers) {
             System.out.println(paper);
         }

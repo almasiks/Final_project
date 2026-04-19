@@ -39,14 +39,9 @@ public class ResearchProject implements Serializable {
 
     public void addParticipant(User user) throws NotResearcherException {
         if (!(user instanceof Researcher)) {
-            throw new NotResearcherException("This user is not a researcher");
+            throw new NotResearcherException("This user is not a researcher: "
+                    + user.getFirstName());
         }
-
-        if (user instanceof Teacher teacher &&
-                teacher.getPosition() != TeacherPosition.PROFESSOR) {
-            throw new NotResearcherException("Only PROFESSOR teacher can join research project");
-        }
-
         Researcher researcher = (Researcher) user;
         if (!participants.contains(researcher)) {
             participants.add(researcher);

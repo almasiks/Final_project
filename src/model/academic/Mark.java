@@ -8,6 +8,9 @@ public class Mark implements Serializable {
     private double finalExam;
 
     public Mark(double firstAttestation, double secondAttestation, double finalExam) {
+        this.firstAttestation = firstAttestation;
+        this.secondAttestation = secondAttestation;
+        this.finalExam = finalExam;
     }
 
 
@@ -55,17 +58,16 @@ public class Mark implements Serializable {
         return "Mark{" + getGradeLetter() + " (" + getTotalScore() + ")}";
     }
 
+    public double getFirstAttestation() {
+        return firstAttestation;
+    }
 
+    public double getSecondAttestation() {
+        return secondAttestation;
+    }
 
-
-
-
-
-
-
-
-
-
-
+    public double getFinalExam() {
+        return finalExam;
+    }
 
 }

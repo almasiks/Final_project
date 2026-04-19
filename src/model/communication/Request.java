@@ -12,27 +12,45 @@ public class Request implements Serializable {
     private RequestStatus status;
     private Date createdAt;
 
-
-    public  Request(String requestid, String description, RequestStatus status, Date createdAt) {
-        this.description=description;
-        this.status=status;
-        this.createdAt=createdAt;
+    public Request(String requestid, String description, RequestStatus status, Date createdAt) {
+        this.requestid = requestid;
+        this.description = description;
+        this.status = status;
+        this.createdAt = createdAt;
     }
 
     public String getRequestid() {
         return requestid;
     }
+
     public void setRequestid(String requestid) {
         this.requestid = requestid;
     }
+
     public String getDescription() {
         return description;
     }
+
     public void setDescription(String description) {
         this.description = description;
     }
+
     public RequestStatus getStatus() {
         return status;
+    }
+
+    public void setStatus(RequestStatus status) {
+        this.status = status;
+    }
+
+    public Date getCreatedAt() {
+        return createdAt;
+    }
+
+    @Override
+    public String toString() {
+        return "Request{id='" + requestid + "', desc='" + description
+                + "', status=" + status + ", created=" + createdAt + "}";
     }
 }
 

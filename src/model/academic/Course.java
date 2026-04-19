@@ -3,6 +3,7 @@ package model.academic;
 import enums.CourseType;
 import model.users.Teacher;
 import model.users.Student;
+
 import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
@@ -20,7 +21,6 @@ public class Course implements Serializable {
     private List<Teacher> instructors = new ArrayList<>();
     private List<Student> registeredStudents = new ArrayList<>();
 
-
     public Course(String courseCode, String courseName, int credits, CourseType type) {
         this.courseCode = courseCode;
         this.courseName = courseName;
@@ -28,16 +28,41 @@ public class Course implements Serializable {
         this.type = type;
     }
 
-
-    public String getCourseCode() { return courseCode; }
-    public int getCredits() { return credits; }
-    public List<Student> getRegisteredStudents() { return registeredStudents; }
-
-
     public boolean registerStudent(Student student) {
+        if (!registeredStudents.contains(student)) {
+            registeredStudents.add(student);
+            return true;
+        }
         return false;
     }
 
+    public String getCourseCode() {
+        return courseCode;
+    }
+
+    public int getCredits() {
+        return credits;
+    }
+
+    public List<Student> getRegisteredStudents() {
+        return registeredStudents;
+    }
+
+    public String getCourseName() {
+        return courseName;
+    }
+
+    public List<Teacher> getInstructors() {
+        return instructors;
+    }
+
+    public void addInstructor(Teacher teacher) {
+        instructors.add(teacher);
+    }
+
+    public CourseType getType() {
+        return type;
+    }
 
     @Override
     public String toString() {
@@ -55,9 +80,5 @@ public class Course implements Serializable {
     @Override
     public int hashCode() {
         return Objects.hash(courseCode);
-    }
-
-    public String getCourseName() {
-        return "";
     }
 }
