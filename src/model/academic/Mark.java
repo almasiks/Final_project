@@ -1,16 +1,23 @@
 package model.academic;
 
 import java.io.Serializable;
+import java.util.Objects;
+
+import model.users.Student;
+import model.academic.Course;
 
 public class Mark implements Serializable {
     private double firstAttestation;
     private double secondAttestation;
     private double finalExam;
-
-    public Mark(double firstAttestation, double secondAttestation, double finalExam) {
+    private Course course;
+    private  Student student;
+    public Mark(double firstAttestation, double secondAttestation, double finalExam,  Course course, Student student) {
         this.firstAttestation = firstAttestation;
         this.secondAttestation = secondAttestation;
         this.finalExam = finalExam;
+        this.course = course;
+        this.student = student;
     }
 
 
@@ -18,7 +25,7 @@ public class Mark implements Serializable {
         return firstAttestation + secondAttestation + finalExam;
     }
 
-    public String getGradeLetter() {
+    public String getLetterGrade() {
         double totalScore = getTotalScore();
         if (95 <= totalScore && totalScore <= 100) {
             return "A";
@@ -55,7 +62,7 @@ public class Mark implements Serializable {
 
     @Override
     public String toString() {
-        return "Mark{" + getGradeLetter() + " (" + getTotalScore() + ")}";
+        return "Mark{" + getLetterGrade() + " (" + getTotalScore() + ")}";
     }
 
     public double getFirstAttestation() {
@@ -70,4 +77,8 @@ public class Mark implements Serializable {
         return finalExam;
     }
 
+    @Override
+    public int  hashCode() {
+        return  Objects.hash(firstAttestation, secondAttestation, finalExam, course, student);
+    }
 }

@@ -2,43 +2,65 @@ package model.academic;
 
 import enums.LessonType;
 import model.users.Teacher;
-
+import java.time.LocalDateTime;
 import java.io.Serializable;
+import java.util.Objects;
 
 public class Lesson implements Serializable {
     private LessonType lessonType;
-    private Teacher instructor;
+    private Teacher teacher;
+    private Course course;
     private String room;
-    private String timeSlot;
+    private LocalDateTime schedule;
 
-    public Lesson(LessonType lessonType, Teacher instructor,
-                  String room, String timeSlot) {
+    public Lesson(LessonType lessonType, Teacher teacher,
+                  String room, LocalDateTime schedule) {
         this.lessonType = lessonType;
-        this.instructor = instructor;
+        this.teacher = teacher;
         this.room = room;
-        this.timeSlot = timeSlot;
+        this.schedule = schedule;
     }
 
     public LessonType getLessonType() {
         return lessonType;
     }
 
-    public Teacher getInstructor() {
-        return instructor;
+    public Teacher getTeacher() {
+        return teacher;
     }
-
+    public Course getCourse(){return course;}
     public String getRoom() {
         return room;
     }
-
-    public String getTimeSlot() {
-        return timeSlot;
+    public LocalDateTime getSchedule() {
+        return schedule;
+    }
+    @Override
+    public String toString() {
+        return "Lesson{" +
+                "type=" + lessonType +
+                ", teacher=" + teacher +
+                ", course=" + course +
+                ", room='" + room + '\'' +
+                ", schedule=" + schedule +
+                '}';
+    }
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        Lesson lesson = (Lesson) o;
+        return lessonType == lesson.lessonType &&
+                Objects.equals(teacher, lesson.teacher) &&
+                Objects.equals(course, lesson.course) &&
+                Objects.equals(room, lesson.room) &&
+                Objects.equals(schedule, lesson.schedule);
     }
 
     @Override
-    public String toString() {
-        return lessonType + " | Room: " + room
-                + " | " + timeSlot
-                + " | Teacher: " + instructor.getFirstName();
+    public int hashCode() {
+        return Objects.hash(lessonType, teacher, course, room, schedule);
     }
+
+
 }

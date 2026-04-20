@@ -3,30 +3,33 @@ package model.users;
 import enums.ManagerType;
 import model.academic.Course;
 import model.communication.News;
+import model.academic.Report;
 import patterns.DataStorage;
 
+import java.util.ArrayList;
 import java.util.Comparator;
 import java.util.List;
+import java.util.Objects;
 
 public class Manager extends Employee {
-    private ManagerType type;
+    private ManagerType managerType;
 
-    public Manager() {}
 
     public Manager(String id, String firstName, String lastName,
                    String email, String password, String department,
                    ManagerType type) {
         super(id, firstName, lastName, email, password, department);
-        this.type = type;
+        this.managerType = type;
     }
 
-    public void assignTeacherCourse(Teacher t, Course c) {
+    public void assignTeacher(Teacher t, Course c) {
         t.manageCourse(c);
+        c.addTeacher(t, null);
         System.out.println("Course " + c.getCourseName()
                 + " assigned to " + t.getFirstName());
     }
 
-    public void approveStudentRegistration(Student student, Course course) {
+    public void approveRegistration(Student student, Course course) {
         boolean success = course.registerStudent(student);
         if (success) {
             student.addCourse(course);
@@ -37,6 +40,18 @@ public class Manager extends Employee {
                     + student.getFirstName());
         }
     }
+    public void manageNews(News news) {
+        List<News> newsList = DataStorage.getInstance().getNewsList();
+        if(newsList.contains(news)) {
+            newsList.remove(news);
+            newsList.add(news);
+            System.out.println("News " + news.getTitle() + " has been updated to the list");
+        }else{
+            DataStorage.getInstance().addNews(news);
+            System.out.println("News " + news.getTitle() + " has been published to the list");
+        }
+
+    }
 
     public void addCourseForRegistration(Course course) {
         DataStorage.getInstance().addCourse(course);
@@ -44,7 +59,7 @@ public class Manager extends Employee {
                 + course.getCourseName());
     }
 
-    public void createReport() {
+    public Report createReport() {
         List<User> users = DataStorage.getInstance().getAllUsers();
         System.out.println("ACADEMIC PERFORMANCE REPORT");
         for (User u : users) {
@@ -54,72 +69,57 @@ public class Manager extends Employee {
                         + " | Credits: " + s.getCurrentCredits());
             }
         }
+        return null;
     }
-
-    public void viewStudentsByGpa() {
+    public void viewStudentsSorted() {
         List<User> users = DataStorage.getInstance().getAllUsers();
-        System.out.println("STUDENTS BY GPA");
+        System.out.println("--- Students Sorted by GPA (High to Low) ---");
         users.stream()
                 .filter(u -> u instanceof Student)
                 .map(u -> (Student) u)
-                .sorted(Comparator.comparingDouble(Student::getGpa).reversed())
-                .forEach(s -> System.out.println(
-                        s.getFirstName() + " " + s.getLastName()
-                                + " | GPA: " + s.getGpa()));
+                .sorted((s1, s2) -> Double.compare(s2.getGpa(), s1.getGpa())) // Сортировка по убыванию GPA
+                .forEach(s -> System.out.println(s.getLastName() + " " + s.getFirstName() + " | GPA: " + s.getGpa()));
+
+
     }
 
-    public void viewStudentsAlphabetically() {
-        List<User> users = DataStorage.getInstance().getAllUsers();
-        System.out.println("STUDENTS ALPHABETICALLY");
-        users.stream()
-                .filter(u -> u instanceof Student)
-                .map(u -> (Student) u)
-                .sorted(Comparator.comparing(User::getLastName))
-                .forEach(s -> System.out.println(
-                        s.getLastName() + " " + s.getFirstName()));
-    }
+    public void Requests(){
+        System.out.println("Current Requests:");
 
-    public void viewTeachers() {
-        List<User> users = DataStorage.getInstance().getAllUsers();
-        System.out.println("TEACHERS");
-        users.stream()
-                .filter(u -> u instanceof Teacher)
-                .map(u -> (Teacher) u)
-                .sorted(Comparator.comparing(User::getLastName))
-                .forEach(t -> System.out.println(
-                        t.getLastName() + " " + t.getFirstName()
-                                + " | Position: " + t.getPosition()
-                                + " | Rating: " + t.getAverageRating()));
-    }
+        // 1. Смотрим логи/жалобы (из твоего Teacher.sendComplaint)
+        List<String> logs = DataStorage.getInstance().getLogs();
+        if (logs.isEmpty()) {
+            System.out.println("No pending complaints or logs.");
+        } else {
+            logs.stream()
+                    .filter(log -> log.contains("[COMPLAINT]"))
+                    .forEach(System.out::println);
+        }
 
-    public void addNews(News news) {
-        DataStorage.getInstance().addNews(news);
-        System.out.println("News added: " + news.getTitle());
     }
-
-    public void removeNews(News news) {
-        DataStorage.getInstance().removeNews(news);
-        System.out.println("News removed: " + news.getTitle());
-    }
-
-    public void viewAllNews() {
-        List<News> newsList = DataStorage.getInstance().getNewsList();
-        System.out.println("NEWS");
-        newsList.stream()
-                .sorted()
-                .forEach(System.out::println);
-    }
-
     public ManagerType getType() {
-        return type;
+        return managerType;
     }
 
     public void setType(ManagerType type) {
-        this.type = type;
+        this.managerType = type;
     }
 
     @Override
     public String toString() {
-        return super.toString() + " [Manager, type: " + type + "]";
+        return "Manager{" + getFirstName() + getLastName() + "managerType=" + managerType + '}';
+    }
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (!(o instanceof Manager)) return false;
+        Manager manager = (Manager) o;
+        return managerType == manager.managerType;
+
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(super.hashCode(), managerType);
     }
 }

@@ -1,6 +1,7 @@
 package model.academic;
 
 import enums.CourseType;
+import enums.LessonType;
 import model.users.Teacher;
 import model.users.Student;
 
@@ -16,52 +17,40 @@ public class Course implements Serializable {
     private String courseName;
     private int credits;
     private CourseType type;
+    private Teacher lectureTeacher;
+    private Teacher practiceTeacher;
+
 
 
     private List<Teacher> instructors = new ArrayList<>();
-    private List<Student> registeredStudents = new ArrayList<>();
+    private List<Student> students = new ArrayList<>();
 
     public Course(String courseCode, String courseName, int credits, CourseType type) {
         this.courseCode = courseCode;
         this.courseName = courseName;
         this.credits = credits;
         this.type = type;
+
+    }
+    public void addTeacher(Teacher teacher, LessonType lessonType) {
+        if (lessonType == LessonType.LECTURE) {
+            this.lectureTeacher = teacher;
+        }else  if (lessonType == LessonType.PRACTICE) {
+            this.practiceTeacher = teacher;
+        }
     }
 
+    public void enrollStudent(Student student) {
+        if (!students.contains(student)){
+            students.add(student);
+        }
+    }
     public boolean registerStudent(Student student) {
-        if (!registeredStudents.contains(student)) {
-            registeredStudents.add(student);
+        if (!students.contains(student)) {
+            students.add(student);
             return true;
         }
         return false;
-    }
-
-    public String getCourseCode() {
-        return courseCode;
-    }
-
-    public int getCredits() {
-        return credits;
-    }
-
-    public List<Student> getRegisteredStudents() {
-        return registeredStudents;
-    }
-
-    public String getCourseName() {
-        return courseName;
-    }
-
-    public List<Teacher> getInstructors() {
-        return instructors;
-    }
-
-    public void addInstructor(Teacher teacher) {
-        instructors.add(teacher);
-    }
-
-    public CourseType getType() {
-        return type;
     }
 
     @Override
@@ -72,13 +61,24 @@ public class Course implements Serializable {
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
-        if (!(o instanceof Course)) return false;
+        if (o == null || getClass() != o.getClass()) return  false;
         Course course = (Course) o;
-        return Objects.equals(courseCode, course.courseCode);
+        return credits == course.credits &&
+                Objects.equals(courseCode, course.courseCode) &&
+                Objects.equals(courseName, course.courseName) &&
+                type == course.type;
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(courseCode);
+        return Objects.hash(courseCode,  courseName, credits, type);
     }
+
+    public String getCourseCode() { return courseCode; }
+    public String getCourseName() { return courseName; }
+    public int getCredits() { return credits; }
+    public CourseType getType() { return type; }
+    public Teacher getLectureTeacher() { return lectureTeacher; }
+    public Teacher getPracticeTeacher() { return practiceTeacher; }
+    public List<Student> getStudents() { return students; }
 }

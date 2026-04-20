@@ -3,27 +3,32 @@ package model.communication;
 
 import model.users.Employee;
 import java.io.Serializable;
-import java.util.Date;
+import java.time.LocalDate;
+import java.time.LocalDateTime;
+import java.util.Objects;
 
 public class Message implements Serializable {
     private Employee sender;
     private Employee receiver;
-    private String content;
-    private Date timestamp;
+    private String text;
+    private LocalDateTime sentAt;
     private boolean isRead;
 
 
-    public Message(Employee sender, Employee receiver, String content) {
-        this.sender = sender;
-        this.receiver = receiver;
-        this.content = content;
-        this.timestamp = new Date();
+    public Message(LocalDateTime sentAt, boolean isRead) {
+        this.sentAt = LocalDateTime.now();
         this.isRead = false;
     }
 
+    public Message(Employee receiver, String text) {
+        this.sender = null;
+        this.receiver = receiver;
+        this.text = text;
+
+    }
 
     public Employee getSender() { return sender; }
-    public String getContent() { return content; }
+    public String getText() { return text; }
     public boolean isRead() { return isRead; }
 
 
@@ -33,6 +38,27 @@ public class Message implements Serializable {
 
     @Override
     public String toString() {
-        return "[" + timestamp + "] From: " + sender.getFirstName() + " - " + content;
+        return "Message{" +
+                "from=" + sender.getLastName() +
+                ", to=" + receiver.getLastName() +
+                ", text='" + text + '\'' +
+                ", sentAt=" + sentAt +
+                ", read=" + isRead +
+                '}';
+    }
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        Message message = (Message) o;
+        return isRead == message.isRead &&
+                Objects.equals(sender, message.sender) &&
+                Objects.equals(receiver, message.receiver)&&
+                Objects.equals(text, message.text)&&
+                Objects.equals(sentAt, message.sentAt);
+    }
+    @Override
+    public int hashCode() {
+        return Objects.hash(sender, receiver, text, sentAt, isRead);
     }
 }

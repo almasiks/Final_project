@@ -21,8 +21,8 @@ public class Employee extends User {
         return department;
     }
 
-    public void sendMessage(Employee receiver, String content) {
-        Message msg = new Message(this, receiver, content);
+    public void sendMessage(Employee receiver, String text) {
+        Message msg = new Message( receiver, text);
         receiver.receiveMessage(msg);
         System.out.println("Message sent to " + receiver.getFirstName());
     }
